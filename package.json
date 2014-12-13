@@ -1,0 +1,25 @@
+{
+  "name": "vec4",
+  "version": "0.0.1",
+  "description": "vec4 for the browser and node.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nathanfaucett/vec4.git"
+  },
+  "main": "src/index.js",
+  "keywords": [
+    "vec4",
+    "vec4.js"
+  ],
+  "author": "Nathan Faucett",
+  "license": "BSD-2-Clause",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "grunt": "",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-jsbeautifier": ""
+  },
+  "dependencies": {
+    "mathf": "nathanfaucett/mathf"
+  }
+}
