@@ -5,14 +5,8 @@ var vec4 = module.exports;
 
 
 vec4.create = function(x, y, z, w) {
-    var v = new mathf.ArrayType(4);
 
-    v[0] = x !== undefined ? x : 0;
-    v[1] = y !== undefined ? y : 0;
-    v[2] = z !== undefined ? z : 0;
-    v[3] = w !== undefined ? w : 1;
-
-    return v;
+    return vec4.set(new mathf.ArrayType(4), x, y, z, w);
 };
 
 vec4.copy = function(a, b) {
