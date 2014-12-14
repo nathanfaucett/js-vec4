@@ -5,30 +5,48 @@ var vec4 = module.exports;
 
 
 vec4.create = function(x, y, z, w) {
+    var out = new mathf.ArrayType(4);
 
-    return vec4.set(new mathf.ArrayType(4), x, y, z, w);
+    out[0] = x !== undefined ? x : 0;
+    out[1] = y !== undefined ? y : 0;
+    out[2] = z !== undefined ? z : 0;
+    out[3] = w !== undefined ? w : 1;
+
+    return out;
 };
 
-vec4.copy = function(a, b) {
-    a[0] = b[0];
-    a[1] = b[1];
-    a[2] = b[2];
-    a[3] = b[3];
+vec4.copy = function(out, a) {
 
-    return a;
+    out[0] = a[0];
+    out[1] = a[1];
+    out[2] = a[2];
+    out[3] = a[3];
+
+    return out;
 };
 
-vec4.set = function(a, x, y, z, w) {
-    a[0] = x !== undefined ? x : 0;
-    a[1] = y !== undefined ? y : 0;
-    a[2] = z !== undefined ? z : 0;
-    a[3] = w !== undefined ? w : 1;
+vec4.clone = function(a) {
+    var out = new mathf.ArrayType(4);
 
-    return a;
+    out[0] = a[0];
+    out[1] = a[1];
+    out[2] = a[2];
+    out[3] = a[3];
+
+    return out;
 };
 
-vec4.add = function(a, b, out) {
-    out = out || a;
+vec4.set = function(out, x, y, z, w) {
+
+    out[0] = x !== undefined ? x : 0;
+    out[1] = y !== undefined ? y : 0;
+    out[2] = z !== undefined ? z : 0;
+    out[3] = w !== undefined ? w : 0;
+
+    return out;
+};
+
+vec4.add = function(out, a, b) {
 
     out[0] = a[0] + b[0];
     out[1] = a[1] + b[1];
@@ -38,8 +56,7 @@ vec4.add = function(a, b, out) {
     return a;
 };
 
-vec4.sub = function(a, b, out) {
-    out = out || a;
+vec4.sub = function(out, a, b) {
 
     out[0] = a[0] - b[0];
     out[1] = a[1] - b[1];
@@ -49,8 +66,7 @@ vec4.sub = function(a, b, out) {
     return out;
 };
 
-vec4.mul = function(a, b, out) {
-    out = out || a;
+vec4.mul = function(out, a, b) {
 
     out[0] = a[0] * b[0];
     out[1] = a[1] * b[1];
@@ -60,13 +76,11 @@ vec4.mul = function(a, b, out) {
     return out;
 };
 
-vec4.div = function(a, b, out) {
+vec4.div = function(out, a, b) {
     var bx = b[0],
         by = b[1],
         bz = b[2],
         bw = b[3];
-
-    out = out || a;
 
     out[0] = a[0] * (bx !== 0 ? 1 / bx : bx);
     out[1] = a[1] * (by !== 0 ? 1 / by : by);
@@ -76,8 +90,7 @@ vec4.div = function(a, b, out) {
     return out;
 };
 
-vec4.sadd = function(a, s, out) {
-    out = out || a;
+vec4.sadd = function(out, a, s) {
 
     out[0] = a[0] + s;
     out[1] = a[1] + s;
@@ -87,8 +100,7 @@ vec4.sadd = function(a, s, out) {
     return a;
 };
 
-vec4.ssub = function(a, s, out) {
-    out = out || a;
+vec4.ssub = function(out, a, s) {
 
     out[0] = a[0] - s;
     out[1] = a[1] - s;
@@ -98,8 +110,7 @@ vec4.ssub = function(a, s, out) {
     return out;
 };
 
-vec4.smul = function(a, s, out) {
-    out = out || a;
+vec4.smul = function(out, a, s) {
 
     out[0] = a[0] * s;
     out[1] = a[1] * s;
@@ -109,10 +120,8 @@ vec4.smul = function(a, s, out) {
     return out;
 };
 
-vec4.sdiv = function(a, s, out) {
+vec4.sdiv = function(out, a, s) {
     s = s !== 0 ? 1 / s : s;
-
-    out = out || a;
 
     out[0] = a[0] * s;
     out[1] = a[1] * s;
@@ -120,6 +129,23 @@ vec4.sdiv = function(a, s, out) {
     out[3] = a[3] * s;
 
     return out;
+};
+
+vec4.lengthSqValues = function(x, y, z, w) {
+
+    return x * x + y * y + z * z + w * w;
+};
+
+vec4.lengthValues = function(x, y, z, w) {
+    var lsq = vec4.lengthSqValues(x, y, z, w);
+
+    return lsq !== 0 ? mathf.sqrt(lsq) : lsq;
+};
+
+vec4.invLengthValues = function(x, y, z, w) {
+    var lsq = vec4.lengthSqValues(x, y, z, w);
+
+    return lsq !== 0 ? 1 / mathf.sqrt(lsq) : lsq;
 };
 
 vec4.dot = function(a, b) {
@@ -144,18 +170,37 @@ vec4.invLength = function(a) {
     return lsq !== 0 ? 1 / mathf.sqrt(lsq) : lsq;
 };
 
-vec4.setLength = function(a, length) {
+vec4.setLength = function(out, a, length) {
+    var x = a[0],
+        y = a[1],
+        z = a[2],
+        w = a[3],
+        s = length * vec4.invLengthValues(x, y, z, w);
 
-    return vec4.smul(a, vec4.invLength(a) * length);
+    out[0] = x * s;
+    out[1] = y * s;
+    out[2] = z * s;
+    out[3] = w * s;
+
+    return out;
 };
 
-vec4.normalize = function(a) {
+vec4.normalize = function(out, a) {
+    var x = a[0],
+        y = a[1],
+        z = a[2],
+        w = a[3],
+        lsq = vec4.invLengthValues(x, y, z, w);
 
-    return vec4.sdiv(a, vec4.length(a));
+    out[0] = x * lsq;
+    out[1] = y * lsq;
+    out[2] = z * lsq;
+    out[3] = w * lsq;
+
+    return out;
 };
 
-vec4.inverse = function(a, out) {
-    out = out || a;
+vec4.inverse = function(out, a) {
 
     out[0] = a[0] * -1;
     out[1] = a[1] * -1;
@@ -165,10 +210,8 @@ vec4.inverse = function(a, out) {
     return out;
 };
 
-vec4.lerp = function(a, b, x, out) {
+vec4.lerp = function(out, a, b, x) {
     var lerp = mathf.lerp;
-
-    out = out || a;
 
     out[0] = lerp(a[0], b[0], x);
     out[1] = lerp(a[1], b[1], x);
@@ -178,7 +221,7 @@ vec4.lerp = function(a, b, x, out) {
     return out;
 };
 
-vec4.min = function(a, b, out) {
+vec4.min = function(out, a, b) {
     var ax = a[0],
         ay = a[1],
         az = a[2],
@@ -187,8 +230,6 @@ vec4.min = function(a, b, out) {
         by = b[1],
         bz = b[2],
         bw = b[3];
-
-    out = out || a;
 
     out[0] = bx < ax ? bx : ax;
     out[1] = by < ay ? by : ay;
@@ -198,7 +239,7 @@ vec4.min = function(a, b, out) {
     return out;
 };
 
-vec4.max = function(a, b, out) {
+vec4.max = function(out, a, b) {
     var ax = a[0],
         ay = a[1],
         az = a[2],
@@ -208,8 +249,6 @@ vec4.max = function(a, b, out) {
         bz = b[2],
         bw = b[3];
 
-    out = out || a;
-
     out[0] = bx > ax ? bx : ax;
     out[1] = by > ay ? by : ay;
     out[2] = bz > az ? bz : az;
@@ -218,7 +257,7 @@ vec4.max = function(a, b, out) {
     return out;
 };
 
-vec4.clamp = function(a, min, max, out) {
+vec4.clamp = function(out, a, min, max) {
     var x = a[0],
         y = a[1],
         z = a[2],
@@ -232,8 +271,6 @@ vec4.clamp = function(a, min, max, out) {
         maxz = max[2],
         maxw = max[3];
 
-    out = out || a;
-
     out[0] = x < minx ? minx : x > maxx ? maxx : x;
     out[1] = y < miny ? miny : y > maxy ? maxy : y;
     out[2] = z < minz ? minz : z > maxz ? maxz : z;
@@ -242,27 +279,11 @@ vec4.clamp = function(a, min, max, out) {
     return out;
 };
 
-vec4.transformMat3 = function(a, m, out) {
-    var x = a[0],
-        y = a[1],
-        z = a[2];
-
-    out = out || a;
-
-    out[0] = x * m[0] + y * m[3] + z * m[6];
-    out[1] = x * m[1] + y * m[4] + z * m[7];
-    out[2] = x * m[2] + y * m[5] + z * m[8];
-
-    return out;
-};
-
-vec4.transformMat4 = function(a, m, out) {
+vec4.transformMat4 = function(out, a, m) {
     var x = a[0],
         y = a[1],
         z = a[2],
         w = a[3];
-
-    out = out || a;
 
     out[0] = x * m[0] + y * m[4] + z * m[8] + w * m[12];
     out[1] = x * m[1] + y * m[5] + z * m[9] + w * m[13];
@@ -272,15 +293,14 @@ vec4.transformMat4 = function(a, m, out) {
     return out;
 };
 
-vec4.transformProjection = function(a, m, out) {
+vec4.transformProjection = function(out, a, m) {
     var x = a[0],
         y = a[1],
         z = a[2],
         w = a[3],
-        d = x * m[3] + m[7] * y + z * m[11] + w * m[15];
+        d = x * m[3] + y * m[7] + z * m[11] + w * m[15];
 
     d = d !== 0 ? 1 / d : d;
-    out = out || a;
 
     out[0] = (x * m[0] + y * m[4] + z * m[8] + w * m[12]) * d;
     out[1] = (x * m[1] + y * m[5] + z * m[9] + w * m[13]) * d;
@@ -290,22 +310,24 @@ vec4.transformProjection = function(a, m, out) {
     return out;
 };
 
-vec4.positionFromMat4 = function(a, m) {
-    a[0] = m[12];
-    a[1] = m[13];
-    a[2] = m[14];
-    a[3] = m[15];
+vec4.positionFromMat4 = function(out, m) {
 
-    return a;
+    out[0] = m[12];
+    out[1] = m[13];
+    out[2] = m[14];
+    out[3] = m[15];
+
+    return out;
 };
 
-vec4.scaleFromMat4 = function(a, m) {
-    a[0] = vec4.length(vec4.set(a, m[0], m[4], m[8], m[12]));
-    a[1] = vec4.length(vec4.set(a, m[1], m[5], m[9], m[13]));
-    a[2] = vec4.length(vec4.set(a, m[2], m[6], m[10], m[14]));
-    a[3] = vec4.length(vec4.set(a, m[3], m[7], m[11], m[15]));
+vec4.scaleFromMat4 = function(out, m) {
 
-    return a;
+    out[0] = vec4.lengthValues(m[0], m[4], m[8], m[12]);
+    out[1] = vec4.lengthValues(m[1], m[5], m[9], m[13]);
+    out[2] = vec4.lengthValues(m[2], m[6], m[10], m[14]);
+    out[3] = vec4.lengthValues(m[3], m[7], m[11], m[15]);
+
+    return out;
 };
 
 vec4.equal = function(a, b) {
