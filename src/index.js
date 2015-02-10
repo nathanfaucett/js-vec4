@@ -56,7 +56,7 @@ vec4.add = function(out, a, b) {
     out[2] = a[2] + b[2];
     out[3] = a[3] + b[3];
 
-    return a;
+    return out;
 };
 
 vec4.sub = function(out, a, b) {
@@ -100,7 +100,7 @@ vec4.sadd = function(out, a, s) {
     out[2] = a[2] + s;
     out[3] = a[3] + s;
 
-    return a;
+    return out;
 };
 
 vec4.ssub = function(out, a, s) {
