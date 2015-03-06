@@ -1,7 +1,7 @@
 var mathf = require("mathf");
 
 
-var vec4 = module.exports;
+var vec4 = exports;
 
 
 vec4.ArrayType = typeof(Float32Array) !== "undefined" ? Float32Array : mathf.ArrayType;
