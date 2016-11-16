@@ -51,3 +51,46 @@ tape("vec4.sdiv(out, a, s)", function(assert) {
     assert.deepEquals(vec4.sdiv(vec4.create(), vec4.create(2, 2, 2, 2), 2), vec4.create(1, 1, 1, 1));
     assert.end();
 });
+
+tape("vec4.dot(out, a, b)", function(assert) {
+    assert.equals(vec4.dot(vec4.create(1, 1, 1, 1), vec4.create(1, 1, 1, 1)), 4);
+    assert.end();
+});
+
+tape("vec4.length(out)", function(assert) {
+    assert.equals(vec4.length(vec4.create(1, 1, 1, 1)), Math.sqrt(4));
+    assert.end();
+});
+
+tape("vec4.setLength(out)", function(assert) {
+    assert.deepEquals(vec4.setLength([], vec4.create(2, 2, 2, 2), Math.sqrt(4)), vec4.create(1, 1, 1, 1));
+    assert.end();
+});
+
+tape("vec4.normalize(out, a)", function(assert) {
+    assert.deepEquals(vec4.normalize([], vec4.create(0, 0, 0, 1)), vec4.create(0, 0, 0, 1));
+    assert.end();
+});
+
+tape("vec4.inverse(out, a)", function(assert) {
+    assert.deepEquals(vec4.inverse([], vec4.create(1, 1, 1, 1)), vec4.create(-1, -1, -1, -1));
+    assert.end();
+});
+
+tape("vec4.lerp(out, a, b, x)", function(assert) {
+    assert.deepEquals(vec4.lerp([], vec4.create(0, 0, 0, 0), vec4.create(2, 2, 2, 2), 0.5), vec4.create(1, 1, 1, 1));
+    assert.end();
+});
+
+tape("vec4.transformQuat(out, a, q)", function(assert) {
+    assert.equals(vec4.equals(
+        vec4.transformMat4([], vec4.create(0, 0, 0, 1), [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        ]),
+        vec4.create(0, 0, 0, 1)
+    ), true);
+    assert.end();
+});

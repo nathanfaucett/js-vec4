@@ -153,7 +153,6 @@ vec4.invLengthValues = function(x, y, z, w) {
 };
 
 vec4.dot = function(a, b) {
-
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
 };
 
@@ -334,21 +333,15 @@ vec4.scaleFromMat4 = function(out, m) {
     return out;
 };
 
-vec4.equal = function(a, b) {
-    return !(
-        a[0] !== b[0] ||
-        a[1] !== b[1] ||
-        a[2] !== b[2] ||
-        a[3] !== b[3]
-    );
+vec4.equals = function(a, b, e) {
+    return !vec4.notEquals(a, b, e);
 };
 
-vec4.notEqual = function(a, b) {
-    return (
-        a[0] !== b[0] ||
-        a[1] !== b[1] ||
-        a[2] !== b[2] ||
-        a[3] !== b[3]
+vec4.notEquals = function(a, b, e) {
+    return (!mathf.equals(a[0], b[0], e) ||
+        !mathf.equals(a[1], b[1], e) ||
+        !mathf.equals(a[2], b[2], e) ||
+        !mathf.equals(a[3], b[3], e)
     );
 };
 
